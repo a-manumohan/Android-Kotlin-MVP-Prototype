@@ -1,13 +1,13 @@
 package `in`.co.mn.mvpkotlinproto.main
 
-import `in`.co.mn.mvpkotlinproto.MvpKotlinProtoApplication
+import `in`.co.mn.mvpkotlinproto.AppComponent
 import `in`.co.mn.mvpkotlinproto.R
-import android.support.v7.app.AppCompatActivity
+import `in`.co.mn.mvpkotlinproto.base.BaseActivity
 import android.os.Bundle
 import android.widget.Toast
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), MainMvp.View {
+class MainActivity : BaseActivity(), MainMvp.View {
 
     @Inject
     lateinit var presenter: MainMvp.Presenter
@@ -16,13 +16,12 @@ class MainActivity : AppCompatActivity(), MainMvp.View {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        DaggerMainComponent.builder()
-                .appComponent((application as MvpKotlinProtoApplication).appComponent)
-                .mainModule(MainModule(this))
-                .build()
-                .inject(this)
-
         presenter.action()
+    }
+
+    override fun inject(appComponent: AppComponent) {
+        appComponent.mainComponent(MainModule(this))
+                .inject(this)
     }
 
     override fun toast(message: String) {
